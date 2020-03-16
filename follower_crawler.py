@@ -1,15 +1,32 @@
 import os, time, errno, pickle, stdiomask
 from selenium import webdriver
-import selenium
+# import selenium
 import re
 from urllib.request import urlopen
 import json
 import csv
 
-driver = webdriver.Chrome("C:\\Windows\webdriver\chromedriver.exe")
+from selenium import webdriver  
+from selenium.webdriver.chrome.options import Options
 
-login_id = ('')
-password = ('')
+CHROME_PATH = '/usr/bin/google-chrome'
+CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
+WINDOW_SIZE = "2560,1440"
+
+chrome_options = Options()  
+chrome_options.add_argument("--headless")  
+chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.binary_location = CHROME_PATH
+
+driver = webdriver.Chrome(
+    executable_path=CHROMEDRIVER_PATH,
+    chrome_options=chrome_options
+)  
+
+import getpass
+
+login_id = input('Username Akun Instagram Anda: ')
+password = getpass.getpass('Password Akun Instagram Anda: ')
 
 def login_instagram():
     try:
@@ -88,5 +105,6 @@ time.sleep(3)
 with open('followers.csv', 'w', newline='') as csvfile:
     wr = csv.writer(csvfile)
     for follower in folllist:
+        wr.writerow([follower])
 time.sleep(5)
 driver.close
