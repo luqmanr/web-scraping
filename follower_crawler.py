@@ -1,32 +1,16 @@
 import os, time, errno, pickle, stdiomask
 from selenium import webdriver
-# import selenium
+import selenium
 import re
 from urllib.request import urlopen
 import json
 import csv
+import yaml
 
-from selenium import webdriver  
-from selenium.webdriver.chrome.options import Options
+driver = webdriver.Chrome("C:\\Windows\webdriver\chromedriver.exe")
 
-CHROME_PATH = '/usr/bin/google-chrome'
-CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
-WINDOW_SIZE = "2560,1440"
-
-chrome_options = Options()  
-chrome_options.add_argument("--headless")  
-chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
-chrome_options.binary_location = CHROME_PATH
-
-driver = webdriver.Chrome(
-    executable_path=CHROMEDRIVER_PATH,
-    chrome_options=chrome_options
-)  
-
-import getpass
-
-login_id = input('Username Akun Instagram Anda: ')
-password = getpass.getpass('Password Akun Instagram Anda: ')
+login_id = input('Your IG Account Username: ')
+password = input('Your IG Account Password: ')
 
 def login_instagram():
     try:
@@ -94,12 +78,60 @@ def follGet(n):
         return follvalue
     except:
         pass
+counter = 0
+def URL():
+    max = 100  #maximal userID to take (to avoid account block by Instagram)
+    while counter <= max:
+        driver.switch_to.window(driver.window_handles[1])
+        driver.get("https://www.instagram.com/"+zstr+"/?__a=1")
+        time.sleep(0.3)
+        userID=driver.find_element_by_xpath('/html/body/pre')
+        user=userID.get_attribute('innerHTML')
+        s=user
+        y=yaml.load(s, Loader=yaml.FullLoader)
+        l=(y.get("logging_page_id"))
+        IGid=(l.split('_'))
+        IGidVal = IGid[1]
+        driver.switch_to.window(driver.window_handles[0])
+        if counter >= max:
+            print("ID Limit exceded")
+            break
+        return IGidVal
 
+def myURL():
+    driver.switch_to.window(driver.window_handles[1])
+    driver.get("https://www.instagram.com/"+login_id+"/?__a=1")
+    time.sleep(0.5)
+    userID=driver.find_element_by_xpath('/html/body/pre')
+    user=userID.get_attribute('innerHTML')
+    s=user
+    y=yaml.load(s, Loader=yaml.FullLoader)
+    l=(y.get("logging_page_id"))
+    IGid=(l.split('_'))
+    myIGidVal = IGid[1]
+    driver.switch_to.window(driver.window_handles[0])
+    return myIGidVal
+
+driver.execute_script("window.open('');")
+myIGidVal = str(myURL())
+print(myIGidVal)
+time.sleep(2)
 folllist = []
 for i in range(1, xint):
     zstr = str(follGet(i))
     print(str(i)+zstr)
-    folllist.append("#TypeYourNameHere, "+login_id+", "+zstr)
+
+    IDstr = str(URL())
+    counter += 1
+    if IDstr == "None":
+        IDstr = "ID limit exceded"
+    else:
+        pass
+    print(IDstr)
+    
+    time.sleep(0.5)
+    folllist.append("#type your name here, "+login_id+", "+myIGidVal+", "+zstr+", "+IDstr)
+
 print(folllist)
 time.sleep(3)
 with open('followers.csv', 'w', newline='') as csvfile:
