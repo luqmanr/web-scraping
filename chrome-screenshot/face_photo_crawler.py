@@ -1,4 +1,5 @@
 import os, time
+from tqdm import tqdm
 
 from google_screenshot import GoogleCrawler
 from google_screenshot import GoogleScreenCrawler
@@ -7,12 +8,10 @@ from bing_screenshot import BingCrawler
 from instagram_screenshot import InstagramCrawler
 from face_cropper_mtcnn import mtcnnCropper
 
-# out_path = '/media/luqmanr/TOSHIBA1TB/Thailand'
-# out_path = '/media/sf_H_Ext/Indonesia'
 out_path = './Test'
 
 daftar_nama = [
-"Profile Picture & Wallpaper"
+"jokowi"
 ]
 
 def files(path):
@@ -20,7 +19,7 @@ def files(path):
         if os.path.isfile(os.path.join(path, file)):
             yield file
 
-for nama in daftar_nama:
+for index, nama in enumerate(daftar_nama):
 	try:
 		GoogleCrawler(nama, out_path)
 		GoogleScreenCrawler(nama, out_path)
@@ -34,7 +33,9 @@ for nama in daftar_nama:
 		for filename in filenames:
 			mtcnnCropper(nama_path, filename)
 
-		time.sleep(50)
+		if index < (len(daftar_nama) - 1):
+			for i in tqdm(range(50)):
+				time.sleep(1)
 	except:
 		print("failed or incomplete operation on", nama)
 
