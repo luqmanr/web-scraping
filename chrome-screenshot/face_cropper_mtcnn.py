@@ -4,12 +4,11 @@ from mtcnn.mtcnn import MTCNN
 from tqdm import tqdm
 from datetime import datetime
 
-detector = MTCNN(min_face_size=100)
+detector = MTCNN(min_face_size=50)
 
 def mtcnnCropper(
     keyword_path, filename,
-    margin=60, rmv_srcimg=True):
-    # print("cropping in folder", keyword_path)
+    margin = 60, margin_percent = 0.3, rmv_srcimg=True):
     
     image_path = os.path.join(keyword_path, filename)
     
@@ -26,13 +25,35 @@ def mtcnnCropper(
     iterator = 1
     for result in results:
         bbox = result['box']
-        up = bbox[0]-margin if bbox[0]-margin>0 else 0
-        down = bbox[0]+bbox[2]+margin if bbox[0]+bbox[2]+margin<image.shape[1] else image.shape[1]
-        left = bbox[1]-margin if bbox[1]-margin>0 else 0
-        right = bbox[1]+bbox[3]+margin if bbox[1]+bbox[3]+margin<image.shape[0] else image.shape[0]
+        print("bbox=",bbox)
+
+        up = bbox[0] - margin if bbox[0] - margin > 0 else 0
+        down = bbox[0] + bbox[2] + margin if bbox[0] + bbox[2] + margin < image.shape[1] else image.shape[1]
+        left = bbox[1] - margin if bbox[1] - margin > 0 else 0
+        right = bbox[1] + bbox[3] + margin if bbox[1] + bbox[3] + margin < image.shape[0] else image.shape[0]
 
         img_width = right - left
         img_height = down - up
+
+        print(img_height,img_width)
+
+        if (img_width < 300) or (img_height < 300):
+            if img_width > img_height:
+                margin = int(margin_percent * img_height)
+            else:
+                margin = int(margin_percent * img_width)
+            up = bbox[0] - margin if bbox[0] - margin > 0 else 0
+            down = bbox[0] + bbox[2] + margin if bbox[0] + bbox[2] + margin < image.shape[1] else image.shape[1]
+            left = bbox[1] - margin if bbox[1] - margin > 0 else 0
+            right = bbox[1] + bbox[3] + margin if bbox[1] + bbox[3] + margin < image.shape[0] else image.shape[0]
+
+            cropped_img = image[left:right, up:down]
+            cropped_img = imutils.resize(cropped_img,width=350)
+            print("smaller than 300")
+
+        else:
+            cropped_img = image[left:right, up:down]
+            print("larger than 300")
 
         try:
             cropped_img = image[left:right, up:down]
@@ -41,7 +62,7 @@ def mtcnnCropper(
             continue
 
         if (img_width < 300) or (img_height < 300):
-            cropped_img = imutils.resize(cropped_img,width=512)
+            cropped_img = imutils.resize(cropped_img,width=350)
 
         now = datetime.now()
         timestamp = datetime.timestamp(now)
