@@ -8,11 +8,11 @@ from instagram_screenshot import InstagramCrawler
 from face_cropper_mtcnn import mtcnnCropper
 
 # out_path = '/media/luqmanr/TOSHIBA1TB/Thailand'
-out_path = './Indonesia_Sirkel'
-# out_path = './Thailand'
+# out_path = '/media/sf_H_Ext/Indonesia'
+out_path = './Test'
 
 daftar_nama = [
-    "Angelica Simperler"
+"Profile Picture & Wallpaper"
 ]
 
 def files(path):
@@ -32,8 +32,9 @@ for nama in daftar_nama:
 		nama_path = os.path.join(out_path,nama)
 		filenames = files(nama_path)
 		for filename in filenames:
-			  mtcnnCropper(nama_path, filename)
+			mtcnnCropper(nama_path, filename)
 
 		time.sleep(50)
 	except:
-		  print("failed or incomplete operation on", nama)
+		print("failed or incomplete operation on", nama)
+
