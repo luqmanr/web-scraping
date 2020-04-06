@@ -1,65 +1,32 @@
 import os, time, errno, pickle, stdiomask, getpass, sys
 from selenium import webdriver
 import selenium
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 import re
 from urllib.request import urlopen
 import json
 import csv
 import yaml
 
-def linux_webdriver():
-    CHROME_PATH = '/usr/bin/google-chrome'
-    CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
-    WINDOW_SIZE = "1440,2560"
+## IF LINUX USE THIS
+CHROME_PATH = '/usr/bin/google-chrome'
+CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
+WINDOW_SIZE = "1440,2560"
 
-    sys.path.insert(0,'/usr/lib/chromium-browser/chromedriver')
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+sys.path.insert(0,'/usr/lib/chromium-browser/chromedriver')
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 
-    driver = webdriver.Chrome(
-        executable_path="/usr/lib/chromium-browser/chromedriver",
-        chrome_options=chrome_options
-    )
-    return driver
+driver = webdriver.Chrome(
+    executable_path="/usr/lib/chromium-browser/chromedriver",
+    chrome_options=chrome_options
+)
 
-def windows_webdriver():
-    driver = webdriver.Chrome("C:\\Windows\webdriver\chromedriver.exe")
-    return driver
+## WINDOWS USE THIS
+# driver = webdriver.Chrome("C:\\Windows\webdriver\chromedriver.exe")
 
-def running_os():
-    os_type = str(input('What OS are you running in? \n insert 1 for Linux \n insert 2 for Windows \n Input: '))
-    print('true OS = ',sys.platform)
-
-    if os_type == "1":
-        driver = linux_webdriver()
-    elif os_type == "2":
-        driver = windows_webdriver()
-    else:
-        print("please pick one or the other")
-        running_os()
-    return driver
-
-driver = running_os()
-
-filename = 'followers.csv'
-with open(filename) as csvfile:
-    reader = csv.reader(csvfile)
-
-    usernames=[]
-    for row in reader:
-        username = row[0]
-        usernames.append(username)
-
-    usernames1 = []
-    for user in usernames:
-        username = user.split(',')
-        username = username[2]
-        usernames1.append(username)
 
 login_id = input('Your IG Account Username: ')
 password = getpass.getpass('Your IG Account Password: ')
@@ -94,8 +61,6 @@ def login_instagram():
         print(" ")
         print("LOG IN FAILED")
 
-login_instagram()
-
 def followerButton():
     try:
         follButtonXpath = '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a'
@@ -112,17 +77,28 @@ def followerButton():
     except:
         pass
 
-# fBody  = driver.find_element_by_xpath("//div[@class='isgrP']")
-# scroll = 0
-# while scroll < xint:
-#     driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', fBody)
-#     time.sleep(0.1)
-#     scroll += 1
-#     if scroll == xint/2:
-#         print("break")
-#         break
-#     else:
-#         pass
+login_instagram()
+time.sleep(5)
+account = driver.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[3]/div/div[4]/a')
+acc = account.get_attribute('href')
+driver.get(acc)
+time.sleep(3)
+
+follvalue=followerButton()
+xint = int(follvalue)
+time.sleep(3)
+
+fBody  = driver.find_element_by_xpath("//div[@class='isgrP']")
+scroll = 0
+while scroll < xint:
+    driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', fBody)
+    time.sleep(0.1)
+    scroll += 1
+    if scroll == xint/2:
+        print("break")
+        break
+    else:
+        pass
 
 def follGet(n):
     try:
@@ -154,31 +130,26 @@ def URL():
             break
         return IGidVal
 
+def myURL():
+    driver.switch_to.window(driver.window_handles[1])
+    driver.get("https://www.instagram.com/"+login_id+"/?__a=1")
+    time.sleep(0.5)
+    userID=driver.find_element_by_xpath('/html/body/pre')
+    user=userID.get_attribute('innerHTML')
+    s=user
+    y=yaml.load(s, Loader=yaml.FullLoader)
+    l=(y.get("logging_page_id"))
+    IGid=(l.split('_'))
+    myIGidVal = IGid[1]
+    driver.switch_to.window(driver.window_handles[0])
+    return myIGidVal
+
 driver.execute_script("window.open('');")
-driver.switch_to.window(driver.window_handles[0])
-
-time.sleep(3)
-
-usernamecounter = 0
-for i in range(1, 100):
-    usernames2 = str(usernames1[usernamecounter])
-    print(usernames2)
-    driver.get("https://www.instagram.com/"+ usernames2 +"/")
-    follvalue=followerButton()
-    folllist=[]
-    xint = int(follvalue)
-    fBody  = driver.find_element_by_xpath("//div[@class='isgrP']")
-    scroll = 0
-    while scroll < xint:
-        driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', fBody)
-        time.sleep(0.1)
-        scroll += 1
-        if scroll == xint/2:
-            print("break")
-            break
-        else:
-            pass
-    
+myIGidVal = str(myURL())
+print(myIGidVal)
+time.sleep(2)
+folllist = []
+for i in range(1, xint):
     zstr = str(follGet(i))
     print(str(i)+zstr)
 
@@ -189,18 +160,15 @@ for i in range(1, 100):
     else:
         pass
     print(IDstr)
-
-    usernamecounter += 1
+    
     time.sleep(0.5)
-    folllist.append(zstr + ", " + IDstr)
+    folllist.append("#type your name here, "+login_id+", "+myIGidVal+", "+zstr+", "+IDstr)
 
 print(folllist)
 time.sleep(3)
-with open("followers" + "_user" + ".csv", 'w', newline='') as csvfile:
+with open('followers.csv', 'w', newline='') as csvfile:
     wr = csv.writer(csvfile)
     for follower in folllist:
         wr.writerow([follower])
-
-print(folllist)
 time.sleep(5)
 driver.close
