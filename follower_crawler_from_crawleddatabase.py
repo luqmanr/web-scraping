@@ -1,4 +1,4 @@
-import os, time, errno, pickle, stdiomask
+import os, time, errno, pickle, stdiomask, getpass, sys
 from selenium import webdriver
 import selenium
 from selenium.webdriver.common.keys import Keys
@@ -9,7 +9,42 @@ import json
 import csv
 import yaml
 
-driver = webdriver.Chrome("C:\\Windows\webdriver\chromedriver.exe")
+def linux_webdriver():
+    CHROME_PATH = '/usr/bin/google-chrome'
+    CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
+    WINDOW_SIZE = "1440,2560"
+
+    sys.path.insert(0,'/usr/lib/chromium-browser/chromedriver')
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+
+    driver = webdriver.Chrome(
+        executable_path="/usr/lib/chromium-browser/chromedriver",
+        chrome_options=chrome_options
+    )
+    return driver
+
+def windows_webdriver():
+    driver = webdriver.Chrome("C:\\Windows\webdriver\chromedriver.exe")
+    return driver
+
+def running_os():
+    os_type = str(input('What OS are you running in? \n insert 1 for Linux \n insert 2 for Windows \n Input: '))
+    print('true OS = ',sys.platform)
+
+    if os_type == "1":
+        driver = linux_webdriver()
+    elif os_type == "2":
+        driver = windows_webdriver()
+    else:
+        print("please pick one or the other")
+        running_os()
+    return driver
+
+driver = running_os()
 
 filename = 'followers.csv'
 with open(filename) as csvfile:
@@ -27,7 +62,7 @@ with open(filename) as csvfile:
         usernames1.append(username)
 
 login_id = input('Your IG Account Username: ')
-password = input('Your IG Account Password: ')
+password = getpass.getpass('Your IG Account Password: ')
 
 def login_instagram():
     try:
@@ -44,9 +79,23 @@ def login_instagram():
         login_button = driver.find_element_by_class_name("L3NKy")
         login_button.click()
     except:
+        print("log in failed")
         pass
 
+    time.sleep(5)
+
+    user_profile_xpath = '//*[@id="react-root"]/section/nav/div[2]/div/div/div[3]/div/div[4]/a'
+    try:
+        check_logged_in = driver.find_element_by_xpath(user_profile_xpath)
+        if check_logged_in:
+            print(" ")
+            print("LOG IN SUCCESS")
+    except:
+        print(" ")
+        print("LOG IN FAILED")
+
 login_instagram()
+
 def followerButton():
     try:
         follButtonXpath = '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a'

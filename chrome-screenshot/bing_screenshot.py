@@ -9,10 +9,11 @@ CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
 WINDOW_SIZE = "3840,2160"
 
 chrome_options = Options()  
-chrome_options.add_argument("--headless")  
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 chrome_options.binary_location = CHROME_PATH
-
 
 def BingCrawler(keyword, out_path):
     driver = webdriver.Chrome(

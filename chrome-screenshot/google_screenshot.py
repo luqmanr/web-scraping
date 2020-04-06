@@ -11,19 +11,27 @@ CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
 WINDOW_SIZE = "2560,1440"
 
 chrome_options = Options()  
-chrome_options.add_argument("--headless")  
-chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-gpu')
+# chrome_options.add_argument('--disable-dev-shm-usage')
+# chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 chrome_options.binary_location = CHROME_PATH
 
 num_of_posts = 150
 
 def GoogleCrawler(keyword, out_path):
     driver = webdriver.Chrome(
-        executable_path=CHROMEDRIVER_PATH,
+#         executable_path="/usr/lib/chromium-browser/chromedriver",
+        # executable_path = "/mnt/i/chromedriver",
         chrome_options=chrome_options
     )
+
+    print(driver)
     
     driver.get("https://images.google.com/")
+
+    print('page openend')
 
     time.sleep(3)
 
@@ -79,6 +87,9 @@ def GoogleCrawler(keyword, out_path):
                 raise
         now = datetime.now()
         timestamp = datetime.timestamp(now)
+
+        time.sleep(2)
+
         print('making Google screenshots for', keyword, index+1)
         driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
     

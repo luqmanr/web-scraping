@@ -1,0 +1,6 @@
+Collecting opencv-contrib-python
+  Downloading https://files.pythonhosted.org/packages/18/32/c302e32d1cf59fd4132c3d82e4182ddd61ac4f0e22cebec44eb36d2e0fd3/opencv_contrib_python-4.2.0.32-cp36-cp36m-manylinux1_x86_64.whl (34.2MB)
+Collecting numpy>=1.11.3 (from opencv-contrib-python)
+  Downloading https://files.pythonhosted.org/packages/07/08/a549ba8b061005bb629b76adc000f3caaaf881028b963c2e18f811c6edc1/numpy-1.18.2-cp36-cp36m-manylinux1_x86_64.whl (20.2MB)
+Installing collected packages: numpy, opencv-contrib-python
+Successfully installed numpy-1.18.2 opencv-contrib-python-4.2.0.32
