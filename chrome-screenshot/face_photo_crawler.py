@@ -41,4 +41,3 @@ for index, nama in enumerate(daftar_nama):
 	# 			time.sleep(1)
 	# except:
 	# 	print("failed or incomplete operation on", nama)
-
