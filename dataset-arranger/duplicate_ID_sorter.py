@@ -10,10 +10,31 @@ def ifFolder(work_path):
             folders.append(path)
     return folders
 
+## IF YOU WANT TO COMPARE TWO FOLDERS
+# folderIDsrc = ifFolder(work_path)
+# folderIDdst = ifFolder(save_path)
+
+## IF YOU WANT TO READ FROM CSV FILE
+folderIDsrc = ifFolder(work_path)
+folderIDdst = []
+with open('./Malaysia.csv', 'r', newline='', encoding='mac_roman') as csv_file:
+    name_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+
+    for names in name_reader:
+        folderIDdst.append(names[0])
+    print(folderIDdst)
+
+def checkDuplicate(folderIDsrc, folderIDdst):
+    for folderSrc in folderIDsrc:
+        for folderDst in folderIDdst:
+            if folderDst.lower() == folderSrc.lower():
+                print(folderDst)
+
+checkDuplicate(folderIDsrc,folderIDdst)
+
 moms = ifFolder(work_path)
 print(moms)
-
-
 def copyDuplicates(work_path, save_path): ## USE THIS FUNCTION IF YOU WANT TO MOVE AND RENAME DUPLICATE IDs TO THEIR REAL NAME
     for mom in moms:
         org_path = os.path.join(work_path, mom)
