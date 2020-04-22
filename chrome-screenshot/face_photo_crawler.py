@@ -6,12 +6,12 @@ from google_screenshot import GoogleScreenCrawler
 from yahoo_screenshot import YahooCrawler
 from bing_screenshot import BingCrawler
 from instagram_screenshot import InstagramCrawler
-# from mtcnn_face_cropper import mtcnnCropper
+from mtcnn_face_cropper import mtcnnCropper
 
 out_path = './output/'
 
 daftar_nama = [
-  "luqmanr"
+  "ayutingting92"
 ]
 
 def files(path):

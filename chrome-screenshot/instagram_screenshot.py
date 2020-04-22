@@ -11,7 +11,7 @@ WINDOW_SIZE = "1440,2560"
 
 sys.path.insert(0,'/usr/lib/chromium-browser/chromedriver')
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
@@ -22,10 +22,11 @@ driver = webdriver.Chrome(
 )
 
 def InstagramCrawler(keyword, out_path):
-    driver.get("https://www.instagram.com/accounts/login/")
-    time.sleep(5)
+    # driver.get("https://www.instagram.com/accounts/login/")
+    # time.sleep(5)
 
-    cookies = loginInstagram(keyword)
+    # cookies = loginInstagram(keyword)
+    cookies = None
     # ProfileScreenshot(keyword, out_path, cookies)
     # PhotoDownloader(keyword, out_path, cookies)
     PostFinder(keyword, out_path, cookies)
@@ -186,10 +187,12 @@ def PostFinder(keyword, out_path, cookies):
     print('opening', keyword, 'page')
 
     driver.get(keywords_link)
-
-    for cookie in cookies:
-        driver.add_cookie(cookie)
-    driver.refresh()
+    try:
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+        driver.refresh()
+    except:
+        print('no cookies')
 
     time.sleep(5)
 
@@ -198,7 +201,15 @@ def PostFinder(keyword, out_path, cookies):
         height = 0
         link_list = []
 
-        for i in range(50):
+        for i in range(20):
+            try:
+                driver.execute_script("window.scrollBy(0,2160)")
+                time.sleep(3)
+                more_posts = driver.find_elements_by_class_name('tCibT')
+                for button in more_posts:
+                    button.click()
+            except:
+                print('no "more posts" button found')
             try:
                 photo_elements = driver.find_elements_by_tag_name('a')
 
@@ -207,7 +218,7 @@ def PostFinder(keyword, out_path, cookies):
 
                     if '/p/' in post_link:
                         link_list.append(post_link)
-                        print(post_link, 'appended to links')
+                        # print(post_link, 'appended to links', '\n')
 
                 next_height = driver.execute_script("return document.body.scrollHeight")
                 if next_height == height:
@@ -220,7 +231,7 @@ def PostFinder(keyword, out_path, cookies):
             except:
                 pass
         link_list = list(dict.fromkeys(link_list))
-        print(link_list, len(link_list))
+        print(len(link_list), "photos found")
         return link_list
     
     def OpenLinks():
