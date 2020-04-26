@@ -8,43 +8,9 @@ from bing_screenshot import BingCrawler
 from instagram_screenshot import InstagramCrawler
 from mtcnn_face_cropper import mtcnnCropper
 
-out_path = '/media/sf_E/RKB-Dataset/Filipina3/'
+out_path = '/media/sf_E/RKB-Dataset/Filipina2/'
 
 daftar_nama = [
-    "Aicelle Santos Filipina",
-  "Aiko Climaco Filipina",
-  "Aiko Melendez Filipina",
-  "Aira Bermudez Filipina",
-  "Aiza Seguerra Filipina",
-  "Agot Isidro Filipina",
-  "Aleck Bovick Filipina",
-  "Alessandra De Rossi Filipina",
-  "Alex Gonzaga Filipina",
-  "Alexa Ilacad Filipina",
-  "Alice Dixson Filipina",
-  "Alicia Alonzo Filipina",
-  "Alicia Mayer Filipina",
-  "Alicia Vergel Filipina",
-  "Alma Bella Filipina",
-  "Alma Moreno Filipina",
-  "Alodia Gosiengfiao Filipina",
-  "Alona Alegre Filipina",
-  "Alyssa Alano Filipina",
-  "Ama Quiambao Filipina",
-  "Amalia Fuentes Filipina",
-  "Amy Austria Filipina",
-  "Amy Perez Filipina",
-  "Ana Capri Filipina",
-  "Ana Roces Filipina",
-  "Analyn Barro Filipina",
-  "Andi Eigenmann Filipina",
-  "Andrea Brillantes Filipina",
-  "Andrea del Rosario Filipina",
-  "Andrea Torres Filipina",
-  "Angel Aquino Filipina",
-  "Angel Locsin Filipina",
-  "Angeli Bayani Filipina",
-  "Angeli Gonzales Filipina",
   "Angeli Nicole Sanoy Filipina",
   "Angelica Jones Filipina",
   "Angelica Panganiban Filipina",
@@ -683,10 +649,10 @@ def cropper():
 
 for index, nama in enumerate(daftar_nama):
 	try:
-		GoogleCrawler(nama, out_path)
+		# GoogleCrawler(nama, out_path)
 		# GoogleScreenCrawler(nama, out_path)
 		# YahooCrawler(nama, out_path)
-		# BingCrawler(nama, out_path)
+		BingCrawler(nama, out_path)
 		# InstagramCrawler(nama, out_path)
 		
 		# cropper()

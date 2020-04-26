@@ -3,6 +3,8 @@ from datetime import datetime
 from optparse import OptionParser
 from selenium import webdriver  
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 CHROME_PATH = '/usr/bin/google-chrome'
 CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
@@ -23,11 +25,12 @@ def BingCrawler(keyword, out_path):
 
     bing_url = "https://www.bing.com/images/search?q="
     keywords_link = bing_url + keyword
-    make_screenshot(keywords_link, keyword, driver, out_path)
+    # fullScreenshot(keywords_link, keyword, driver, out_path)
+    focusedScreenshot(keywords_link, keyword, driver, out_path)
 
     driver.close()
 
-def make_screenshot(keywords_link, keyword, driver, out_path):
+def fullScreenshot(keywords_link, keyword, driver, out_path):
     if not keywords_link.startswith('http'):
         raise Exception('URLs need to start with "http"') 
 
@@ -71,3 +74,67 @@ def make_screenshot(keywords_link, keyword, driver, out_path):
         driver.execute_script("window.scrollBy(0,1920)")
         time.sleep(5)
         scroll_iterator += 1
+
+def focusedScreenshot(keywords_link, keyword, driver, out_path):
+    if not keywords_link.startswith('http'):
+        raise Exception('URLs need to start with "http"') 
+
+    print('opening page')
+    driver.get(keywords_link)
+
+    scroll_iterator = 0
+    height = 0
+    
+    def findFirstLink():
+        try:
+            Hrefs = driver.find_elements_by_class_name('iusc')
+            for index, href in enumerate(Hrefs):
+                if index == 0:
+                    return href
+        except:
+            print('first link not found')
+            return None
+
+    firstPhoto = findFirstLink()
+    firstPhoto.click()
+
+    time.sleep(3)
+
+    photo_limit = 400
+    retry_count = 0
+    retry_limit = 5
+
+    for i in range(photo_limit):
+        save_path = os.path.join(out_path, keyword)
+        try:
+            os.makedirs(save_path)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
+        if i == 0:
+            now = datetime.now()
+            timestamp = datetime.timestamp(now)
+            print('making Bing screenshots for', keyword, (i+1))
+            driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
+
+            print('screenshot made')
+            time.sleep(2)
+
+        try:
+            actions = ActionChains(driver)
+            actions.send_keys(Keys.ARROW_RIGHT).perform()
+        except:
+            print('no photos found')
+            retry_count += 1
+
+        if retry_count == retry_limit:
+            print('no more photos found')
+            break
+        
+        time.sleep(2)
+
+        now = datetime.now()
+        timestamp = datetime.timestamp(now)
+        print('making Bing screenshots for', keyword, (i+2))
+        driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))

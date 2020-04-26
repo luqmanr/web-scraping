@@ -11,7 +11,7 @@ WINDOW_SIZE = "1440,2560"
 
 sys.path.insert(0,'/usr/lib/chromium-browser/chromedriver')
 chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
