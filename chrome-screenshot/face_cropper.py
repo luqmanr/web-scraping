@@ -8,9 +8,8 @@ from tqdm import tqdm
 # from instagram_screenshot import InstagramCrawler
 from mtcnn_face_cropper import mtcnnCropper
 
-out_path = '/mnt/e/RKB-Dataset/Filipina3/'
-
-daftar_nama = os.listdir('/mnt/e/RKB-Dataset/Filipina2/')
+out_path = '/mnt/i/RKB-Dataset/Coding Mom (Duplicate)/Harlia'
+daftar_nama = os.listdir(out_path)
 
 def files(path):
     for file in os.listdir(path):

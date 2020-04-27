@@ -8,7 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 CHROME_PATH = '/usr/bin/google-chrome'
 CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
-WINDOW_SIZE = "3840,2160"
+WINDOW_SIZE = "1920,1080"
 
 chrome_options = Options()  
 chrome_options.add_argument('--headless')
@@ -85,22 +85,22 @@ def focusedScreenshot(keywords_link, keyword, driver, out_path):
     scroll_iterator = 0
     height = 0
     
-    def findFirstLink():
+    def findPhotoLinks():
         try:
             Hrefs = driver.find_elements_by_class_name('iusc')
             for index, href in enumerate(Hrefs):
                 if index == 0:
-                    return href
+                    return href, len(Hrefs)
         except:
             print('first link not found')
             return None
 
-    firstPhoto = findFirstLink()
+    firstPhoto, num_photos = findPhotoLinks()
     firstPhoto.click()
 
     time.sleep(3)
 
-    photo_limit = 400
+    photo_limit = num_photos * 4
     retry_count = 0
     retry_limit = 5
 

@@ -14,8 +14,6 @@ def mtcnnCropper(
     
     try:
         image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
-        if rmv_srcimg:
-            os.remove(image_path)
     except:
         print('[Warning!]:{} image reading process not successful!'.format(image_path))
         return
@@ -76,3 +74,9 @@ def mtcnnCropper(
             print()
             print('[Warning!]:{} save process not successful!'.format(img_name))
             continue
+    try:
+        if rmv_srcimg:
+            open(image_path, 'w').close()
+            os.remove(image_path)
+    except:
+        print('origin photo not deleted')
