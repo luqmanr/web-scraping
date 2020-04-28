@@ -1,4 +1,4 @@
-import os, time
+import os, time, argparse
 from tqdm import tqdm
 
 # from google_screenshot import GoogleCrawler
@@ -8,7 +8,19 @@ from tqdm import tqdm
 # from instagram_screenshot import InstagramCrawler
 from mtcnn_face_cropper import mtcnnCropper
 
-out_path = '/mnt/i/RKB-Dataset/Coding Mom (Duplicate)/Harlia'
+'''
+## USAGE
+python3 face_cropper.py -i <path-to folders of ids>
+## EXAMPLE
+python3 face_cropper.py -i '/mnt/e/RKB-Dataset/Filipina2'
+'''
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--dataset", required=True,
+	help="path to input directory of faces + images")
+args = vars(ap.parse_args())
+
+out_path = args['dataset']
 daftar_nama = os.listdir(out_path)
 
 def files(path):
@@ -25,6 +37,7 @@ def cropper():
 
 for index, nama in enumerate(daftar_nama):
 	try:
+		print('processing', nama)
 		# GoogleCrawler(nama, out_path)
 		# GoogleScreenCrawler(nama, out_path)
 		# YahooCrawler(nama, out_path)

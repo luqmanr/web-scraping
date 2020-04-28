@@ -100,7 +100,7 @@ def focusedScreenshot(keywords_link, keyword, driver, out_path):
 
     time.sleep(3)
 
-    photo_limit = num_photos * 4
+    photo_limit = num_photos * 3 if num_photos * 3 < 300 else 300
     retry_count = 0
     retry_limit = 5
 

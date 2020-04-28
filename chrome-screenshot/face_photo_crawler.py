@@ -1,106 +1,29 @@
-import os, time
+import os, time, argparse
 from tqdm import tqdm
+from multiprocessing import Process
 
 from google_screenshot import GoogleCrawler
 from google_screenshot import GoogleScreenCrawler
 from yahoo_screenshot import YahooCrawler
 from bing_screenshot import BingCrawler
 from instagram_screenshot import InstagramCrawler
-# from mtcnn_face_cropper import mtcnnCropper
+from mtcnn_face_cropper import mtcnnCropper
+'''
+## USAGE
+python3 face_photo_crawler.py -i <path-to folders of ids>
+## EXAMPLE
+python3 face_photo_crawler.py -i '/mnt/e/RKB-Dataset/Filipina2'
+'''
 
-out_path = '/media/sf_E/RKB-Dataset/Filipina2/'
+ap = argparse.ArgumentParser()
+ap.add_argument("-o", "--output", required=True,
+	help="path to output directory of downloads")
+args = vars(ap.parse_args())
+
+out_path = args['output']
+# out_path = '/media/sf_E/RKB-Dataset/Filipina2/'
 
 daftar_nama = [
-  "Ashley Cabrera Filipina",
-  "Asia Agcaoili Filipina",
-  "Assunta de Rossi Filipina",
-  "Atang dela Rama Filipina",
-  "Athena Filipina",
-  "Aubrey Miles Filipina",
-  "Aurora Sevilla Filipina",
-  "Ayanna Oliva Filipina",
-  "Ayen Munji-Laurel Filipina",
-  "Ayra Mariano Filipina",
-  "Bangs Garcia Filipina",
-  "Barbara Miguel Filipina",
-  "Barbara Perez Filipina",
-  "Barbie Almalbis Filipina",
-  "Barbie Forteza Filipina",
-  "Barbie Imperial Filipina",
-  "Bea Alonzo Filipina",
-  "Bea Binene Filipina",
-  "Bea Nicolas Filipina",
-  "Bea Rose Santiago Filipina",
-  "Bea Saw Filipina",
-  "Beauty Gonzalez Filipina",
-  "Bela Padilla Filipina",
-  "Bella Flores Filipina",
-  "Belle Mariano Filipina",
-  "Bettina Carlos Filipina",
-  "Beverly Vergel Filipina",
-  "Bianca Gonzalez Filipina",
-  "Bianca King Filipina",
-  "Bianca Manalo Filipina",
-  "Bianca Umali Filipina",
-  "Bing Loyzaga Filipina",
-  "Bituin Escalante Filipina",
-  "Boots Anson-Roa Filipina",
-  "Brenna Garcia Filipina",
-  "Bubbles Paraiso Filipina",
-  "Cacai Bautista Filipina",
-  "Camille Prats Filipina",
-  "Candy Pangilinan Filipina",
-  "Caridad Sanchez Filipina",
-  "Carina Afable Filipina",
-  "Carla Abellana Filipina",
-  "Carla Humphries Filipina",
-  "Carlene Aguilar Filipina",
-  "Carmen Rosales Filipina",
-  "Carmencita Abad Filipina",
-  "Carmi Martin Filipina",
-  "Carmina Villarroel Filipina",
-  "Carol Banawa Filipina",
-  "Cassandra Ponti Filipina",
-  "Celeste Legaspi Filipina",
-  "Celia Rodriguez Filipina",
-  "Ces Quesada Filipina",
-  "Chacha Cañete Filipina",
-  "Chanda Romero Filipina",
-  "Charee Pineda Filipina",
-  "Charice Pempengco Filipina",
-  "Charito de Leon Filipina",
-  "Charito Solis Filipina",
-  "Chariz Solomon Filipina",
-  "Charlene Gonzales Filipina",
-  "Charo Santos Filipina",
-  "Chat Silayan Filipina",
-  "Cherie Gil Filipina",
-  "Cherry Lou Filipina",
-  "Cherry Pie Picache Filipina",
-  "Cheska Garcia Filipina",
-  "Chichay Filipina",
-  "Chin Chin Gutierrez Filipina",
-  "Chlaui Malayao Filipina",
-  "Chloe Dauden Filipina",
-  "Christine Jacob Filipina",
-  "Chx Alcala Filipina",
-  "Chynna Ortaleza Filipina",
-  "Ciara Sotto Filipina",
-  "Cielito del Mundo Filipina",
-  "Cindy Kurleto Filipina",
-  "Claire dela Fuente Filipina",
-  "Claudia Zobel Filipina",
-  "Claudine Barretto Filipina",
-  "Coleen Garcia Filipina",
-  "Coleen Perez Filipina",
-  "Coney Reyes Filipina",
-  "Cris Villonco Filipina",
-  "Cristina Aragon Filipina",
-  "Cristina Gonzales Filipina",
-  "Cristine Reyes Filipina",
-  "Cynthia Zamora Filipina",
-  "Daiana Menezes Filipina",
-  "Daisy Reyes Filipina",
   "Daisy Romualdez Filipina",
   "Danielle Castaño Filipina",
   "Danita Paner Filipina",
@@ -616,20 +539,29 @@ def cropper():
 	nama_path = os.path.join(out_path,nama)
 	filenames = files(nama_path)
 	for filename in filenames:
-		mtcnnCropper(nama_path, filename)
+		  mtcnnCropper(nama_path, filename)
 
 for index, nama in enumerate(daftar_nama):
-	try:
-		# GoogleCrawler(nama, out_path)
-		# GoogleScreenCrawler(nama, out_path)
-		# YahooCrawler(nama, out_path)
-		BingCrawler(nama, out_path)
-		# InstagramCrawler(nama, out_path)
-		
-		# cropper()
+    
+    GoogleCrawling = Process(target=GoogleCrawler, args=(nama, out_path))
+    GoogleCrawling.start()
+    BingCrawling = Process(target=BingCrawler, args=(nama, out_path))
+    BingCrawling.start()
+    
+    # GoogleCrawler(nama, out_path)
+    # GoogleScreenCrawler(nama, out_path)
+    # YahooCrawler(nama, out_path)
+    # BingCrawler(nama, out_path)
+    # InstagramCrawler(nama, out_path)
 
-	# 	if index < (len(daftar_nama) - 1):
-	# 		for i in tqdm(range(50)):
-	# 			time.sleep(1)
-	except:
-		print("failed or incomplete operation on", nama)
+    GoogleCrawling.join()
+    BingCrawling.join()
+
+    try:    
+        cropper()
+
+        if index < (len(daftar_nama) - 1):
+            for i in tqdm(range(50)):
+                time.sleep(1)
+    except:
+        print("failed or incomplete operation on", nama)

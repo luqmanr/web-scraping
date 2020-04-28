@@ -33,7 +33,7 @@ def GoogleCrawler(keyword, out_path):
 
     print('page openend')
 
-    time.sleep(3)
+    time.sleep(1)
 
     search_bar = driver.find_element_by_name("q")
     search_bar.send_keys(keyword)
@@ -55,7 +55,7 @@ def GoogleCrawler(keyword, out_path):
             found_element = driver.find_element_by_xpath('//*[@id="islrg"]/div[1]/div[' + str(i) + ']/a[1]')
             found_element.click()
 
-            time.sleep(2)
+            time.sleep(1)
 
             def src_screenshot():       ## IF YOU WANT TO TAKE A SCREENSHOT OF THE src img, USE THIS FUNCTION
                 found_href = found_element.get_attribute("href")
