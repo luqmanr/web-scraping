@@ -1,42 +1,40 @@
-# Process Crawling
+# **INSTAGRAM FOLLOWERS CRAWLING**
 
-### A. Untuk melakukan scraping, pertama ada beberapa hal yang perlu dijelaskan
+## 1. PROGRAM instagram_crawler_v3
 
-Pertama, scraping atau crawling dilakukan menggunakan Selenium Webdriver
-```
-https://www.selenium.dev/about/
-```
-Kedua, secara top-down, cara kerja program ini adalah untuk mengekstrak
-data-data yang dikembalikan oleh instagram.com ke browser kita
-dimana data tersebut berbentuk html
+**A. Pengantar**
+.
 
-### B. Get username followers
-Ada beberapa hal yang perlu disiapkan untuk menggunakan program scraping ini
-```
-1. akun instagram
-2. daftar username / username yang ingin diambil data followersnya
-```
+**B. Kegunaan Dari Program**
+Berikut beberapa hal yang bisa diperoleh melalui program ini:
 
-### Secara proses demikian
-```
-1. selenium webdriver pergi ke halaman login instagram
-2. anda akan diminta untuk memasukkan username dan password akun instagram anda
-3. program akan membaca daftar username yang ingin anda scraping
-4. program akan membuka halaman profile username yang telah anda masukkan
-5. di halaman ini selenium webdriver akan mencoba untuk mengekstrak data followers
-6. data followers yang telah didapatkan bisa disimpan secara lokal ke dalam sebuah file
-   a. csv
-   b. json
-   c. txt
-   d. dsb
-7. (to do) mengirim data followers yang telah didapatkan ke queue database, untuk disimpan
-8. dengan bentuk data
-```
-```
-{username_scraper, username_scraped, username_found}
-```
-```
-a. username_scraper = adalah hanya sebagai penanda siapa yang melakukan scraping
-b. username_scraped = adalah username yang anda ingin cari data followersnya
-c. username_found = adalah username-username yang telah anda dapatkan dari username_scraped
-```
+* Mengambil data username-username yang merupakan followers dari akun Instagram yang dicrawl
+* Mengambil data nama lengkap, jumlah following, dan jumlah post dari akun tersebut
+* Menyimpan data-data di atas ke dalam file csv dan menyimpannya pada folder Google Drive anda
+
+**C. Hal-Hal Yang Harus Disiapkan**
+Pertama-tama, sebelum menjalankan program berikut anda harus menyiapkan:
+
+* Akun Google Drive
+* Username Instagram beserta passwordnya
+* Username Instagram yang mau dicrawl
+
+**D. Cara Menjalankan Program**
+Untuk menjalankan program ini, berikut langkah-langkah yang harus dilalui
+
+* Jalankan sel pertama, untuk mounting program ke folder Google Drive akun anda.
+* Masuk ke url yang muncul setelah menjalankan sel tersebut. Lalu, login dengan menggunakan akun Google anda.
+* Setelah itu salin kode yang muncul setelah sign in, lalu tempelkan pada program instagram_crawler_v3 dan tekan enter.
+* Selanjutnya, jalankan sel kedua yang akan meng-import beberapa library yang dibutuhkan program.
+* Lalu, masukkan username dan password Instagram ke dalam textbox yang akan muncul setelah menjalankan sel yang ketiga. Login agar dapat mengakses profil username yang akan dicrawl.
+* Selanjutnya, isi list pada sel keempat dengan username yang ingin anda crawl, lalu jalankan sel tersebut. Contoh format penulisannya adalah sebagai berikut: (apabila ingin crawl username tyogotest2)
+
+'''
+usernames_target = [
+  "tyogotest2"
+]
+'''
+
+* Setelah itu jalankan sel kelima, dan secara otomatis program akan crawling username yang anda berikan, lalu diikuti dengan juga meng-crawl username-username yang merupakan follower dari akun tersebut.
+* Hasil crawl bisa anda lihat di directory berikut:
+'/content/gdrive/My Drive/instagram-crawling/instagram-usernames'
