@@ -1,4 +1,4 @@
-import os, argparse
+import os, argparse, glob
 from pathlib import Path
 
 ap = argparse.ArgumentParser()
@@ -9,7 +9,6 @@ args = vars(ap.parse_args())
 src = args['input']
 
 ## src = path to highest folder you want to scan
-import glob
 files = glob.glob(src + '/**/*.jpg', recursive=True)
 
 for index, file in enumerate(files):

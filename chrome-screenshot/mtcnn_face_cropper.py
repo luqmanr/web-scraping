@@ -38,29 +38,26 @@ def mtcnnCropper(
         leftX = bbox[0] - marginX if bbox[0] - marginX > 0 else 0
         # print('topY, rightX, bottomY, leftX', topY, rightX, bottomY, leftX)
 
-        img_width = rightX - leftX
-        img_height = topY - bottomY
+        img_width = abs(rightX - leftX)
+        img_height = abs(bottomY - topY)
         # print('img_width, img_height', img_width, img_height)
 
         try:
-            if (img_width < 250):
-                cropped_img = image[topY:bottomY, leftX:rightX]
-                cropped_img = imutils.resize(cropped_img, width=250)
-                # print("width smaller than 300")
             if (img_height < 250):
                 cropped_img = image[topY:bottomY, leftX:rightX]
-                cropped_img = imutils.resize(cropped_img, height=250)
-                # print("height smaller than 300")
+                cropped_img = imutils.resize(cropped_img, height=250, width=(round(img_width*250/img_height)))
+            if (img_width < 250):
+                cropped_img = image[topY:bottomY, leftX:rightX]
+                cropped_img = imutils.resize(cropped_img, width=250, height=(round(img_height*250/img_width)))
             else:
                 cropped_img = image[topY:bottomY, leftX:rightX]
-                # print("larger than 300")
         except:
             print('[Warning!]:{} crop process not successful!'.format(image_path))
             continue
 
         now = datetime.now()
         timestamp = datetime.timestamp(now)
-        img_name = os.path.join(keyword_path, filename[:-4] + '_' + str(timestamp) + '.jpg')
+        img_name = os.path.join(keyword_path, str(timestamp) + '.jpg')
         iterator += 1
 
         try:

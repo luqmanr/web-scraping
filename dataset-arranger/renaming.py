@@ -3,7 +3,7 @@ from datetime import date
 from datetime import datetime
 
 path_img_dump = "/media/sf_H_DRIVE"
-filename_mode = "New Guinea"
+filename_mode = " Filipina"
 
 today = date.today()
 today = today.strftime("%b-%d-%Y")
@@ -51,7 +51,7 @@ def rename_folders():
             os.rename(src, dst)
             print('renamed',src,'to',dst)
 
-        # if_foldername()
-        just_rename()
+        if_foldername()
+        # just_rename()
 
 rename_folders()

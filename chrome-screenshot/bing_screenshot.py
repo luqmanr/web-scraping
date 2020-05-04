@@ -76,65 +76,70 @@ def fullScreenshot(keywords_link, keyword, driver, out_path):
         scroll_iterator += 1
 
 def focusedScreenshot(keywords_link, keyword, driver, out_path):
-    if not keywords_link.startswith('http'):
-        raise Exception('URLs need to start with "http"') 
+    try:
+        if not keywords_link.startswith('http'):
+            raise Exception('URLs need to start with "http"') 
 
-    print('opening page')
-    driver.get(keywords_link)
+        print('opening page')
+        driver.get(keywords_link)
 
-    scroll_iterator = 0
-    height = 0
-    
-    def findPhotoLinks():
-        try:
-            Hrefs = driver.find_elements_by_class_name('iusc')
-            for index, href in enumerate(Hrefs):
-                if index == 0:
-                    return href, len(Hrefs)
-        except:
-            print('first link not found')
-            return None
-
-    firstPhoto, num_photos = findPhotoLinks()
-    firstPhoto.click()
-
-    time.sleep(3)
-
-    photo_limit = num_photos * 3 if num_photos * 3 < 300 else 300
-    retry_count = 0
-    retry_limit = 5
-
-    for i in range(photo_limit):
-        save_path = os.path.join(out_path, keyword)
-        try:
-            os.makedirs(save_path)
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
-
-        if i == 0:
-            now = datetime.now()
-            timestamp = datetime.timestamp(now)
-            print('making Bing screenshots for', keyword, (i+1))
-            driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
-
-            print('screenshot made')
-            time.sleep(2)
-
-        try:
-            actions = ActionChains(driver)
-            actions.send_keys(Keys.ARROW_RIGHT).perform()
-        except:
-            print('no photos found')
-            retry_count += 1
-
-        if retry_count == retry_limit:
-            print('no more photos found')
-            break
-        
         time.sleep(2)
 
-        now = datetime.now()
-        timestamp = datetime.timestamp(now)
-        print('making Bing screenshots for', keyword, (i+2))
-        driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
+        scroll_iterator = 0
+        height = 0
+        
+        def findPhotoLinks():
+            try:
+                Hrefs = driver.find_elements_by_class_name('iusc')
+                for index, href in enumerate(Hrefs):
+                    if index == 0:
+                        return href, len(Hrefs)
+            except:
+                print('first link not found')
+                return None
+
+        firstPhoto, num_photos = findPhotoLinks()
+        firstPhoto.click()
+
+        time.sleep(1)
+
+        photo_limit = num_photos * 3 if num_photos * 3 < 300 else 300
+        retry_count = 0
+        retry_limit = 5
+
+        for i in range(photo_limit):
+            save_path = os.path.join(out_path, keyword)
+            try:
+                os.makedirs(save_path)
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
+
+            if i == 0:
+                now = datetime.now()
+                timestamp = datetime.timestamp(now)
+                print('making Bing screenshots for', keyword, (i+1))
+                driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
+
+                print('screenshot made')
+                time.sleep(2)
+
+            try:
+                actions = ActionChains(driver)
+                actions.send_keys(Keys.ARROW_RIGHT).perform()
+            except:
+                print('no photos found')
+                retry_count += 1
+
+            if retry_count == retry_limit:
+                print('no more photos found')
+                break
+            
+            time.sleep(2)
+
+            now = datetime.now()
+            timestamp = datetime.timestamp(now)
+            print('making Bing screenshots for', keyword, (i+2))
+            driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
+    except:
+        print('getting images for "%s" failed' %keyword)
