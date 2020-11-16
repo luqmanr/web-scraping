@@ -1,4 +1,4 @@
-import os, time, argparse
+import os, time, argparse, glob
 from tqdm import tqdm
 
 # from google_screenshot import GoogleCrawler
@@ -31,9 +31,12 @@ def files(path):
 def cropper():
 	print("cropping for", nama)
 	nama_path = os.path.join(out_path,nama)
-	filenames = files(nama_path)
+	# filenames = files(nama_path)
+	filenames_jpg = glob.glob(nama_path + '/**/*.jpg', recursive=True)
+	filenames = glob.glob(nama_path + '/**/*.png', recursive=True)
+	filenames.extend(filenames_jpg)
 	for filename in filenames:
-		mtcnnCropper(nama_path, filename)
+		mtcnnCropper(nama_path, filename, rmv_srcimg=True)
 
 for index, nama in enumerate(daftar_nama):
 	try:

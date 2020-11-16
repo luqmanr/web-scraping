@@ -2,7 +2,7 @@ import os, glob, datetime, time
 from datetime import date
 from datetime import datetime
 
-path_img_dump = "/media/sf_H_DRIVE"
+path_img_dump = "/mnt/d/RKB-Dataset/Filipina-cropped"
 filename_mode = " Filipina"
 
 today = date.today()

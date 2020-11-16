@@ -4,17 +4,21 @@ from mtcnn.mtcnn import MTCNN
 from tqdm import tqdm
 from datetime import datetime
 
-detector = MTCNN(min_face_size=50)
+detector = MTCNN(min_face_size=100)
 
 def mtcnnCropper(
-    keyword_path, filename, margin_percent = 0.45, rmv_srcimg=True):
+    keyword_path, filename, margin_percent = 0.45, rmv_srcimg=False):
     
     image_path = os.path.join(keyword_path, filename)
     
     try:
         image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
+        # if rmv_srcimg:
+            # os.remove(image_path)
     except:
         print('[Warning!]:{} image reading process not successful!'.format(image_path))
+        # if rmv_srcimg:
+            # os.remove(image_path)
         return
     
     results = detector.detect_faces(image)
@@ -66,9 +70,9 @@ def mtcnnCropper(
             print()
             print('[Warning!]:{} save process not successful!'.format(img_name))
             continue
+
     try:
         if rmv_srcimg:
-            open(image_path, 'w').close()
             os.remove(image_path)
     except:
         print('origin photo not deleted')
