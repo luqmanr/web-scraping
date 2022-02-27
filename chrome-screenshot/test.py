@@ -1,4 +1,4 @@
-import os, time, errno
+import os, time, errno, sys
 from datetime import datetime
 from optparse import OptionParser
 from selenium import webdriver  
@@ -11,7 +11,7 @@ CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
 WINDOW_SIZE = "1920,1080"
 
 chrome_options = Options()  
-# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
@@ -108,21 +108,24 @@ def focusedScreenshot(keywords_link, keyword, driver, out_path):
     retry_limit = 5
 
     for i in range(photo_limit):
-        # save_path = os.path.join(out_path, keyword)
-        # try:
-        #     os.makedirs(save_path)
-        # except OSError as e:
-        #     if e.errno != errno.EEXIST:
-        #         raise
+        save_path = os.path.join(out_path, keyword)
+        try:
+            os.makedirs(save_path)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
 
         if i == 0:
             now = datetime.now()
             timestamp = datetime.timestamp(now)
             print('making Bing screenshots for', keyword, (i+1))
-            # driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
+            driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
 
             print('screenshot made')
             time.sleep(2)
+        
+        if i == 1:
+            sys.exit()
 
         try:
             actions = ActionChains(driver)
@@ -143,7 +146,7 @@ def focusedScreenshot(keywords_link, keyword, driver, out_path):
         now = datetime.now()
         timestamp = datetime.timestamp(now)
         print('making Bing screenshots for', keyword, (i+2))
-        # driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
+        driver.save_screenshot(os.path.join(save_path, str(timestamp)+'.png'))
 
 driver = webdriver.Chrome(
     executable_path=CHROMEDRIVER_PATH,

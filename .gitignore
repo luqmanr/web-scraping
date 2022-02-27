@@ -6,3 +6,6 @@
 /collect-data-instagram/config
 /.vscode
 /face-crawling-instagram
+
+*.deb
+*.zip
