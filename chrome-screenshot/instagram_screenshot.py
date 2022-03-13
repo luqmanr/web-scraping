@@ -17,7 +17,7 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 
 driver = webdriver.Chrome(
-    executable_path="/usr/lib/chromium-browser/chromedriver",
+    executable_path=CHROMEDRIVER_PATH,
     chrome_options=chrome_options
 )
 

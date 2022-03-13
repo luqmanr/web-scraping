@@ -6,7 +6,8 @@ RUN python -m pip install --user -U pip
 RUN python -m pip install --user --default-timeout=100 \
     selenium==4.1.2 \
     opencv-python==4.5.5.64 \
-    numpy==1.22.3
+    numpy==1.22.3 \
+    tqdm==4.63.0
 
 # download google-chrome and chromedriver
 RUN wget \
