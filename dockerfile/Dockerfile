@@ -4,7 +4,9 @@ FROM python:3.8.9
 # download selenium
 RUN python -m pip install --user -U pip
 RUN python -m pip install --user --default-timeout=100 \
-    selenium==4.1.2
+    selenium==4.1.2 \
+    opencv-python==4.5.5.64 \
+    numpy==1.22.3
 
 # download google-chrome and chromedriver
 RUN wget \
